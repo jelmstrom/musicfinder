@@ -13,10 +13,17 @@ import java.util.HashMap;
  *
  */
 public class Cache {
+    private static int cacheDuration = 120;
+    static{
+        if(System.getenv("cache_expiry") != null ) {
+            cacheDuration = Integer.parseInt(System.getenv("cache_expiry"));
+        }
+        System.out.println(cacheDuration);
+    }
     private static final HashMap<String, CacheEntity<Artist>> cache = new HashMap<>();
 
     public static Artist put(Artist artist) {
-        CacheEntity<Artist> previous = cache.put(artist.getId(), new CacheEntity<>(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10), artist));
+        CacheEntity<Artist> previous = cache.put(artist.getId(), new CacheEntity<>(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(cacheDuration), artist));
         return previous == null? null : previous.artist;
     }
 

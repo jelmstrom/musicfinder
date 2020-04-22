@@ -28,7 +28,7 @@ public class Discography {
         if(StringUtil.isBlank(search.getArtist())) {
             return Response
                     .status(412)
-                    .entity("PLease specify an artist to search for")
+                    .entity("Please specify an artist to search for")
                     .build();
         }
         ArtistList artistDetails = service.findArtist(search.getArtist());
