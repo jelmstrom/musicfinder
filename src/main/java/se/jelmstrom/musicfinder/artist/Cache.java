@@ -15,10 +15,9 @@ import java.util.HashMap;
 public class Cache {
     private static int cacheDuration = 120;
     static{
-        if(System.getenv("cache_expiry") != null ) {
-            cacheDuration = Integer.parseInt(System.getenv("cache_expiry"));
+        if(System.getenv("CACHE_EXPIRY_SECONDS") != null ) {
+            cacheDuration = Integer.parseInt(System.getenv("CACHE_EXPIRY_SECONDS"));
         }
-        System.out.println(cacheDuration);
     }
     private static final HashMap<String, CacheEntity<Artist>> cache = new HashMap<>();
 

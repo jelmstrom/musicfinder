@@ -9,10 +9,22 @@
 ```
 Starts a service on `localhost:8081`
 
+to verify that the in app cache does cache requests set an environment variable to control the cache timeout, e.g.
+```
+CACHE_EXPIRY_SECONDS=5 mvn exec:exec
+```
+Cache default is 120 seconds.
+
  ### docker
  ```
-docker buid . -t musicfinder
-docker run -p 8081.8081 musicfinder
+docker build . -t musicfinder
+docker run -p 8081:8081 musicfinder
+
+```
+or with cache control
+
+```
+docker run -e CACHE_EXPIRY_SECONDS=17 -p 8081:8081 musicfinder
 ```
 
  ##  api
@@ -107,10 +119,9 @@ For a production environment I would add  slf4j / logback or similar but that wo
 Simple apache-commons console logging, without formatting used here.
 
 ### Environment variables 
-You might notice that there are no environment parameters or configuration. For a production environment I'd probably tweak at least 
+You might notice that there are no environment parameters or configuration other than cache control. For a production environment I'd also tweak at least 
 * jetty server thread pool
 * http client cache parameters
-* cacheExpiry for the internal cache
 * log settings
 * Thread pool executor for the async handling of requests to coverArt 
 
