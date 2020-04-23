@@ -20,7 +20,7 @@ public class Server {
         String logLevel = System.getenv("LOG_LEVEL");
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http","warn");
-        System.setProperty("org.apache.commons.logging.simplelog.log.se.jelmstrom.musicfinder", logLevel == null?"info":logLevel);
+        System.setProperty("org.apache.commons.logging.simplelog.log.se.jelmstrom.musicfinder", logLevel == null?"debug":logLevel);
     }
     private final static int PORT = 8081;
 
