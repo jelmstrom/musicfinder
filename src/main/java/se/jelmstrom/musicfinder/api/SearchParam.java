@@ -3,10 +3,7 @@ package se.jelmstrom.musicfinder.api;
 public class SearchParam {
     private String artist;
 
-
-    public SearchParam() {
-    }
-
+    public SearchParam() {}
 
     public String getArtist() {
         return artist;

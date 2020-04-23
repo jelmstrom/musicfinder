@@ -6,12 +6,12 @@ import se.jelmstrom.musicfinder.http.ClientWrapper;
 import java.util.Optional;
 
 public class DiscogsClient {
-    private static final ClientWrapper client = new ClientWrapper();
-    private final String urlPattern = "https://api.discogs.com/artists/%s";
+    private final ClientWrapper client = new ClientWrapper();
+    private static final String URL_PATTERN = "https://api.discogs.com/artists/%s";
 
 
     public ArtistBiography artistFacts(String id) {
-        Optional<ArtistBiography> discogsData = client.makeRequest(String.format(urlPattern, id), ArtistBiography.class);
+        Optional<ArtistBiography> discogsData = client.makeRequest(String.format(URL_PATTERN, id), ArtistBiography.class);
         return discogsData.get();
     }
 }

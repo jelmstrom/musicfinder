@@ -27,12 +27,12 @@ public class Server {
     private final static String CONTEXT_PATH = "/";
     private final static String API_PACKAGE = "se.jelmstrom.musicfinder";
     private final static String API_PATH = "/*";
-    private final static Log log = LogFactory.getLog(Server.class);
-    private static final ObjectMapper mapper = new ObjectMapper()
+    private final static Log LOG = LogFactory.getLog(Server.class);
+    private static final ObjectMapper MAPPER = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static void main(final String[] args) throws Exception {
-        log.info("Booting");
+        LOG.info("Booting");
         QueuedThreadPool threadPool = new QueuedThreadPool(100, 10);
         final org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server(threadPool);
         ServerConnector httpConnector = new ServerConnector(server, new HttpConnectionFactory());
@@ -40,7 +40,7 @@ public class Server {
         server.addConnector(httpConnector);
         final ServletContextHandler servletContextHandler = new ServletContextHandler(server, CONTEXT_PATH);
         JacksonJaxbJsonProvider jsonProvider = new JacksonJaxbJsonProvider();
-        jsonProvider.setMapper(mapper);
+        jsonProvider.setMapper(MAPPER);
         final ResourceConfig config = new ResourceConfig()
                 .register(jsonProvider)
                 .packages(API_PACKAGE);

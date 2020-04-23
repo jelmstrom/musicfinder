@@ -14,9 +14,9 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.stream.Collectors.toList;
 
 public class CoverArtClient {
-    private static final ClientWrapper client = new ClientWrapper();
-    private final static Log log = LogFactory.getLog(CoverArtClient.class);
-    private final String coverArtPattern = "http://coverartarchive.org/release-group/%s";
+    private final ClientWrapper client = new ClientWrapper();
+    private static final Log LOG = LogFactory.getLog(CoverArtClient.class);
+    private static final String COVER_ART_PATTERN = "http://coverartarchive.org/release-group/%s";
 
     /**
      * Adds artwork to albums.
@@ -43,11 +43,11 @@ public class CoverArtClient {
 
     public CompletableFuture<Album> decorateWithArtwork(Album album) {
         return CompletableFuture.supplyAsync(() -> {
-            Optional<ArtworkResponse> images = client.makeRequest(String.format(coverArtPattern, album.getId()), ArtworkResponse.class);
+            Optional<ArtworkResponse> images = client.makeRequest(String.format(COVER_ART_PATTERN, album.getId()), ArtworkResponse.class);
             images.ifPresent(artworkResponse -> album.setImages(artworkResponse.getImages().stream().map(Artwork::getImage).collect(toList())));
             return album;
         }).exceptionally( err -> {
-            log.warn(String.format("Failed to get artwork for %s", album.getId()));
+            LOG.warn(String.format("Failed to get artwork for %s", album.getId()));
             return album;
         });
     }

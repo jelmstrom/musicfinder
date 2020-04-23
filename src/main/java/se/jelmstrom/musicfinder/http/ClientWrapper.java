@@ -22,8 +22,8 @@ import java.util.Optional;
 
 public class ClientWrapper {
 
-    private final static Log log = LogFactory.getLog(ClientWrapper.class);
-    private static final CacheConfig cacheConfig = CacheConfig.custom()
+    private final static Log LOG = LogFactory.getLog(ClientWrapper.class);
+    private static final CacheConfig CACHE_CONFIG = CacheConfig.custom()
             .setMaxCacheEntries(1000)
             .setMaxObjectSize(500000)
             .setAllow303Caching(true)
@@ -31,38 +31,38 @@ public class ClientWrapper {
             .setHeuristicDefaultLifetime(3600)
             .setSharedCache(true)
             .build();
-    private static final RequestConfig requestConfig = RequestConfig.custom()
+    private static final RequestConfig REQUEST_CONFIG = RequestConfig.custom()
             .setConnectTimeout(30000)
             .setSocketTimeout(30000)
             .build();
-    private static final CloseableHttpClient cachingClient = CachingHttpClients.custom()
-            .setCacheConfig(cacheConfig)
+    private static final CloseableHttpClient CACHING_CLIENT = CachingHttpClients.custom()
+            .setCacheConfig(CACHE_CONFIG)
             .setUserAgent("MusicFinder/1.0 (johan.elmmstrom@gmail.com)")
-            .setDefaultRequestConfig(requestConfig)
+            .setDefaultRequestConfig(REQUEST_CONFIG)
             .setDefaultHeaders(Arrays.asList(
                     new BasicHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString()),
                     new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())))
             .build();
-    private static final HttpCacheContext context = HttpCacheContext.create();
+    private static final HttpCacheContext CONTEXT = HttpCacheContext.create();
 
-    private static final ObjectMapper mapper = new ObjectMapper()
+    private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
     public <T> Optional<T> makeRequest(String url, Class t) {
         HttpGet httpget = new HttpGet(url);
-        log.trace(String.format("Getting resource %s", url));
-        try (CloseableHttpResponse response = cachingClient.execute(httpget, context)) {
-            if(context.getCacheResponseStatus().equals(CacheResponseStatus.CACHE_MISS)) {
-                log.debug(String.format("%s for url %s", context.getCacheResponseStatus(), url));
+        LOG.trace(String.format("Getting resource %s", url));
+        try (CloseableHttpResponse response = CACHING_CLIENT.execute(httpget, CONTEXT)) {
+            if(CONTEXT.getCacheResponseStatus().equals(CacheResponseStatus.CACHE_MISS)) {
+                LOG.debug(String.format("%s for url %s", CONTEXT.getCacheResponseStatus(), url));
             }
             if (response.getStatusLine().getStatusCode() < 300) {
-                return Optional.of((T) mapper.readValue(response.getEntity().getContent(), t));
+                return Optional.of((T) MAPPER.readValue(response.getEntity().getContent(), t));
             }
         } catch (IOException e) {
-            log.warn(String.format("Could not complete request to %s [ %s %s ]", url, e.getCause(), e.getMessage()));
+            LOG.warn(String.format("Could not complete request to %s [ %s %s ]", url, e.getCause(), e.getMessage()));
         } catch (IndexOutOfBoundsException ioex){
-            log.warn(String.format("Failed to build entity  %s [ %s %s ]", url, ioex.getCause(), ioex.getMessage()));
+            LOG.warn(String.format("Failed to build entity  %s [ %s %s ]", url, ioex.getCause(), ioex.getMessage()));
         }
         return Optional.empty();
     }
