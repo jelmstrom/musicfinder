@@ -1,5 +1,8 @@
 package se.jelmstrom.musicfinder.artist;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import se.jelmstrom.musicfinder.artist.client.musicBrainz.MusicBrainzClient;
 import se.jelmstrom.musicfinder.artist.dto.Artist;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ public class Cache {
             cacheDuration = Integer.parseInt(System.getenv("CACHE_EXPIRY_SECONDS"));
         }
     }
+    private final static Log log = LogFactory.getLog(Cache.class);
     private static final HashMap<String, CacheEntity<Artist>> cache = new HashMap<>();
 
     public static Artist put(Artist artist) {
@@ -28,7 +32,12 @@ public class Cache {
 
     public static Artist get(String mbId) {
         CacheEntity<Artist> artistCacheEntity = cache.get(mbId);
-        return artistCacheEntity == null || artistCacheEntity.expires.isBefore(LocalDateTime.now(ZoneOffset.UTC))? null : artistCacheEntity.artist;
+        boolean expired = (artistCacheEntity == null || artistCacheEntity.expires.isBefore(LocalDateTime.now(ZoneOffset.UTC)));
+        if(expired){
+            return null;
+        }
+        log.debug("Serving from cache");
+        return artistCacheEntity.artist;
     }
 
     private static class CacheEntity<Artist> {

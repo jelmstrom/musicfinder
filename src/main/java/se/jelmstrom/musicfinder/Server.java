@@ -17,9 +17,10 @@ import org.glassfish.jersey.servlet.ServletContainer;
 public class Server {
 
     static{
+        String logLevel = System.getenv("LOG_LEVEL");
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "info");
-        System.setProperty("org.apache.commons.logging.simplelog.log.se.jelmstrom.musicfinder.http", "debug");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http","info");
+        System.setProperty("org.apache.commons.logging.simplelog.log.se.jelmstrom.musicfinder", logLevel == null?"info":logLevel);
     }
     private final static int PORT = 8081;
 

@@ -6,7 +6,7 @@ import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Artist {
     private String name;
     private String id;
@@ -16,7 +16,7 @@ public class Artist {
     private List<Album> albums;
     private ArtistBiography bio;
     private String discogsId;
-    private List<Relation> relations = new ArrayList<>();
+    private List<Relation> relations;
 
     public Artist() {
     }

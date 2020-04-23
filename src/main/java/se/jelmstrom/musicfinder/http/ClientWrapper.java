@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.cache.CacheResponseStatus;
 import org.apache.http.client.cache.HttpCacheContext;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -50,14 +51,18 @@ public class ClientWrapper {
 
     public <T> Optional<T> makeRequest(String url, Class t) {
         HttpGet httpget = new HttpGet(url);
+        log.trace(String.format("Getting resource %s", url));
         try (CloseableHttpResponse response = cachingClient.execute(httpget, context)) {
-            log.debug(context.getCacheResponseStatus());
+            if(context.getCacheResponseStatus().equals(CacheResponseStatus.CACHE_MISS)) {
+                log.debug(String.format("%s for url %s", context.getCacheResponseStatus(), url));
+            }
             if (response.getStatusLine().getStatusCode() < 300) {
                 return Optional.of((T) mapper.readValue(response.getEntity().getContent(), t));
             }
         } catch (IOException e) {
             log.warn(String.format("Could not complete request to %s [ %s %s ]", url, e.getCause(), e.getMessage()));
-            e.printStackTrace();
+        } catch (IndexOutOfBoundsException ioex){
+            log.warn(String.format("Failed to build entity  %s [ %s %s ]", url, ioex.getCause(), ioex.getMessage()));
         }
         return Optional.empty();
     }

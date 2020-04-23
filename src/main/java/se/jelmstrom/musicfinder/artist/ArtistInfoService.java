@@ -1,5 +1,7 @@
 package se.jelmstrom.musicfinder.artist;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import se.jelmstrom.musicfinder.artist.client.artwork.CoverArtClient;
 import se.jelmstrom.musicfinder.artist.client.discogs.DiscogsClient;
 import se.jelmstrom.musicfinder.artist.client.musicBrainz.MusicBrainzClient;
