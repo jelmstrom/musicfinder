@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MusicBrainzClient {
     private final ClientWrapper client = new ClientWrapper();
     private final static Log log = LogFactory.getLog(MusicBrainzClient.class);
-
+    private static final String DISCOGS_TYPE_ID = "04a5b104-a4c2-4bac-99a1-7b837c37d9e4";
     private final String searchArtistPattern = "https://musicbrainz.org/ws/2/artist?query=%s";
     private final String getArtistPattern = "https://musicbrainz.org/ws/2/artist/%s?inc=url-rels+release-groups";
 
@@ -51,7 +51,7 @@ public class MusicBrainzClient {
 
         Relation discogsResource = artist.getRelations()
                 .stream()
-                .filter(rel -> "discogs".equalsIgnoreCase(rel.getType()))
+                .filter(rel -> DISCOGS_TYPE_ID.equalsIgnoreCase(rel.getTypeId()))
                 .findFirst()
                 .orElse(new Relation());
         if(discogsResource.getUrl() != null) {
