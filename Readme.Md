@@ -70,7 +70,7 @@ The search will return a list of results orderd by their individual `score`
 
 ```
  
- Vi athe  `url` property you can get the fill artist details
+ Via the  `url` property you can get the full artist details
  
  ```
 {
